@@ -28,9 +28,15 @@ class _MapaPageState extends State<MapaPage> {
    
     return Scaffold(
       backgroundColor: Colors.white,
-    body: BlocBuilder< MiUbicacionBloc,MiUbicacionState >(
-      builder: ( _ , state) => crearMapa(state)
-      ), 
+    body: Stack(
+      children: [
+        BlocBuilder< MiUbicacionBloc,MiUbicacionState >(
+          builder: ( _ , state) => crearMapa(state)
+          ),
+          SearchBar(),//TODO: hacer toggle cuando tengo manual marker
+          ManualMarker()
+      ],
+    ), 
     floatingActionButton:Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
