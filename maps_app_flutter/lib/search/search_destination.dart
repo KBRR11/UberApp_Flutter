@@ -1,6 +1,8 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maps_app_flutter/bloc/busqueda/busqueda_bloc.dart';
 import 'package:maps_app_flutter/model/search_result.dart';
 
 class SearchDestination extends SearchDelegate<SearchResult>{
@@ -37,6 +39,8 @@ class SearchDestination extends SearchDelegate<SearchResult>{
           leading: Icon(Icons.location_on),
           title: Text('Colocar ubicación manualmente'),
           onTap: (){
+           final busquedaBloc =  BlocProvider.of<BusquedaBloc>(context);
+           busquedaBloc.add(OnActivarManualMarker());
             this.close(context, SearchResult(cancelo: false, manual: true));
           },
         )
