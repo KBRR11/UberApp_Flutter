@@ -64,7 +64,7 @@ class _BuildManualMarker extends StatelessWidget {
               child: ZoomIn(
                 child: MaterialButton(
                   onPressed: () {
-                    //TODO: hacer algo
+                    this.calcularDestino(context);
                   },
                   child: Text('Confirmar ubicación',
                       style: TextStyle(color: Colors.white)),
@@ -77,5 +77,18 @@ class _BuildManualMarker extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void calcularDestino(BuildContext context) async{
+   final trafficService = new TrafficService();
+   final inicio = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
+   final destino = BlocProvider.of<MapaBloc>(context).state.ubicacionCentral;
+   final trafficResponse = await trafficService.getCoordsInicioYDestino(inicio, destino);
+   final geometry = trafficResponse.routes[0].geometry;
+   final distance = trafficResponse.routes[0].distance;
+   final duration = trafficResponse.routes[0].duration;
+   //decodificar los puntos que vienen en geometry
+   final points = Poly.Polyline.Decode(encodedString: geometry, precision: 6).decodedCoords;
+   print(points);
   }
 }

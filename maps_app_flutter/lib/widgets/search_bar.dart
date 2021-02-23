@@ -24,7 +24,7 @@ class SearchBar extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: GestureDetector(
             onTap: () async {
-              print('buscando..');
+              print('buscando..');//TODO: borrar print
               final result = await showSearch(
                   context: context, delegate: SearchDestination());
               this.retornoBusqueda(result);
