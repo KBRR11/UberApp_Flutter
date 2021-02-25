@@ -21,6 +21,11 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     color: Colors.transparent,
     width: 4
     );
+    Polyline _miRutaManual = new Polyline(
+    polylineId: PolylineId('_miRutaManual'),
+    color: Colors.black87,
+    width: 4
+    );
 
   void initMapa(GoogleMapController controller){
    if (!state.mapaListo) {
@@ -54,6 +59,8 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
       //print('Mapa Siguiendo: ${this._miRuta.points[this._miRuta.points.length - 1]}');
       yield state.copyWith(ubicacionCentral: event.centroMapa);
       
+    }else if( event is OnCrearRutaManual){
+      yield* this._onCrearRutaManual(event);
     }
   }
 
@@ -90,6 +97,19 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
         this.moverCamara(this._miRuta.points[this._miRuta.points.length - 1]);
       }
         yield state.copyWith(seguirUbicacion: !state.seguirUbicacion);
+  }
+
+  Stream<MapaState> _onCrearRutaManual(OnCrearRutaManual event)async*{
+    this._miRutaManual = _miRutaManual.copyWith(
+      pointsParam: event.rutaCoordenadas
+    );
+    final currentPolylines = state.polylines;
+    currentPolylines['_miRutaManual'] = this._miRutaManual;
+
+    yield state.copyWith(
+      polylines: currentPolylines,
+      //TODO: Marcadores personalizados
+    );
   }
 
 }

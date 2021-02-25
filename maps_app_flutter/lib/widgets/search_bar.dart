@@ -14,7 +14,7 @@ class SearchBar extends StatelessWidget {
     );
   }
 
-  @override
+  
   Widget buildSearchbar(BuildContext context) {
     return SafeArea(
       child: SlideInDown(
@@ -24,7 +24,7 @@ class SearchBar extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: GestureDetector(
             onTap: () async {
-              print('buscando..');//TODO: borrar print
+             
               final result = await showSearch(
                   context: context, delegate: SearchDestination());
               this.retornoBusqueda(result);
@@ -53,7 +53,7 @@ class SearchBar extends StatelessWidget {
   }
 
   void retornoBusqueda(SearchResult result) {
-    print('Canceló: ${result.cancelo}');
+    print('Canceló: ${result.cancelo}');//TODO:borrar
     print('Manual: ${result.manual}');
     if (result.cancelo) {
       return;

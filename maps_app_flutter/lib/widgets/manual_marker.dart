@@ -81,14 +81,20 @@ class _BuildManualMarker extends StatelessWidget {
 
   void calcularDestino(BuildContext context) async{
    final trafficService = new TrafficService();
+   final mapaBloc = BlocProvider.of<MapaBloc>(context);
+
    final inicio = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
-   final destino = BlocProvider.of<MapaBloc>(context).state.ubicacionCentral;
+   final destino = mapaBloc.state.ubicacionCentral;
    final trafficResponse = await trafficService.getCoordsInicioYDestino(inicio, destino);
    final geometry = trafficResponse.routes[0].geometry;
    final distance = trafficResponse.routes[0].distance;
    final duration = trafficResponse.routes[0].duration;
    //decodificar los puntos que vienen en geometry
    final points = Poly.Polyline.Decode(encodedString: geometry, precision: 6).decodedCoords;
-   print(points);
+   final List<LatLng> rutaManual = points.map(
+     (point) => LatLng(point[0], point[1])
+     ).toList();
+   //print(points);
+   mapaBloc.add(OnCrearRutaManual(rutaCoordenadas:rutaManual, distance: distance, duration: duration ));
   }
 }

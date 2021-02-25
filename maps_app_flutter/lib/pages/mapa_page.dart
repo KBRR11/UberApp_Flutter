@@ -33,7 +33,7 @@ class _MapaPageState extends State<MapaPage> {
         BlocBuilder< MiUbicacionBloc,MiUbicacionState >(
           builder: ( _ , state) => crearMapa(state)
           ),
-          SearchBar(),//TODO: hacer toggle cuando tengo manual marker
+          SearchBar(),
           ManualMarker()
       ],
     ), 
@@ -55,7 +55,10 @@ class _MapaPageState extends State<MapaPage> {
       final mapaBloc = BlocProvider.of<MapaBloc>(context);
       mapaBloc.add(OnNewLocation(ubicacion: state.ubicacion));
       final camaraPosition = CameraPosition(target: state.ubicacion, zoom:16);
-      return GoogleMap(
+ 
+      return BlocBuilder<MapaBloc, MapaState>(
+        builder: (context, _) {
+          return GoogleMap(
         initialCameraPosition: camaraPosition, 
         myLocationEnabled: true, 
         zoomControlsEnabled: false, 
@@ -67,6 +70,11 @@ class _MapaPageState extends State<MapaPage> {
           mapaBloc.add( OnMovioMapa(centroMapa: cameraPosition.target) );// la idea es hacer que si el target es diferente al point final entonces SeguirUbicación cambiará a false
         },
         );
+        },
+      );
+
+
+      
   }
 }
 
