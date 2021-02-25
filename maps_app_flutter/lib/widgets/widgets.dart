@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_app_flutter/bloc/busqueda/busqueda_bloc.dart';
 import 'package:maps_app_flutter/bloc/mapa/mapa_bloc.dart';
 import 'package:maps_app_flutter/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
+import 'package:maps_app_flutter/helpers/helpers.dart';
 import 'package:polyline/polyline.dart' as Poly;
 
 import 'package:maps_app_flutter/model/search_result.dart';
