@@ -2,15 +2,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_app_flutter/bloc/busqueda/busqueda_bloc.dart';
+import 'package:maps_app_flutter/model/search_response.dart';
 import 'package:maps_app_flutter/model/search_result.dart';
+import 'package:maps_app_flutter/services/traffic_service.dart';
 
 class SearchDestination extends SearchDelegate<SearchResult>{
 
   @override
   final String searchFieldLabel;
+  final TrafficService _trafficService;
+  final LatLng miUbicacion;
 
-  SearchDestination(): this.searchFieldLabel = 'Buscar...';
+  SearchDestination(
+    this.miUbicacion
+    ): this.searchFieldLabel = 'Buscar...',
+                       this._trafficService = new TrafficService();
 
 
   @override
@@ -28,11 +36,13 @@ class SearchDestination extends SearchDelegate<SearchResult>{
   
     @override
     Widget buildResults(BuildContext context) {
-      return Text('buildResults');
+      
+      return this._construirResultadosSugerencias();
     }
   
     @override
     Widget buildSuggestions(BuildContext context) {
+      if (this.query.length == 0){
     return ListView(
       children: [
         ListTile(
@@ -46,6 +56,52 @@ class SearchDestination extends SearchDelegate<SearchResult>{
         )
       ],
     );
+
+      }
+      return this._construirResultadosSugerencias();
+  }
+
+  Widget _construirResultadosSugerencias(){
+  if (this.query.length == 0) {
+    return Container();
+  }
+
+    return FutureBuilder(
+      future: _trafficService.getResultadosRequest(this.query.trim(), this.miUbicacion),
+      builder: (BuildContext context, AsyncSnapshot<SearchResponse> snapshot) { 
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            final lugares = snapshot.data.features;
+
+            if (lugares.length==0) {
+              return ListTile(
+               leading: Icon(Icons.error_outline_outlined),
+               tileColor: Colors.red[300],
+               title: Text('No se encontraron resultados'),
+               subtitle: Text('intenta con algo diferente'),
+              );
+            }
+
+            return ListView.separated(
+              itemCount: lugares.length,
+              separatorBuilder: (_, i)=>Divider(), 
+              itemBuilder: (_, i){
+                final lugar = lugares[i];
+
+                return ListTile(
+                  leading: Icon(Icons.place),
+                  title: Text(lugar.textEs),
+                  subtitle: Text(lugar.placeNameEs),
+                  onTap: (){
+                   print(lugar.text);
+                  },
+                );
+              } 
+              );
+       }
+      );
   }
 
 }
