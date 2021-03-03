@@ -11,8 +11,9 @@ class SearchDestination extends SearchDelegate<SearchResult> {
   final String searchFieldLabel;
   final TrafficService _trafficService;
   final LatLng miUbicacion;
+  final List<SearchResult> historial;
 
-  SearchDestination(this.miUbicacion)
+  SearchDestination(this.miUbicacion, this.historial)
       : this.searchFieldLabel = 'Buscar...',
         this._trafficService = new TrafficService();
 
@@ -48,7 +49,16 @@ class SearchDestination extends SearchDelegate<SearchResult> {
               busquedaBloc.add(OnActivarManualMarker());
               this.close(context, SearchResult(cancelo: false, manual: true));
             },
+          ),
+          ...historial.map((result) => ListTile(
+            leading: Icon(Icons.history_outlined),
+            title: Text(result.nombreDestino),
+            subtitle: Text(result.descripcion),
+            onTap: (){
+              this.close(context, result);
+            },
           )
+          ).toList()
         ],
       );
     }

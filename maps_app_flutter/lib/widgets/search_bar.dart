@@ -25,9 +25,9 @@ class SearchBar extends StatelessWidget {
           child: GestureDetector(
             onTap: () async {
             final miUbicacion = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
-             
+             final historial = BlocProvider.of<BusquedaBloc>(context).state.historial;
               final result = await showSearch(
-                  context: context, delegate: SearchDestination(miUbicacion));
+                  context: context, delegate: SearchDestination(miUbicacion,historial));
               this.retornoBusqueda(context ,result);
             },
             child: Container(
@@ -54,15 +54,14 @@ class SearchBar extends StatelessWidget {
   }
 
   Future<void> retornoBusqueda(BuildContext context ,SearchResult result) async{
-    print('Canceló: ${result.cancelo}');//TODO:borrar
-    print('Manual: ${result.manual}');
+    
     if (result.cancelo) return;
 
    //calcular ruta en base al valor result
    if(!result.cancelo  && !result.manual){//quiere decir que la busqueda se hizo por query
    calculandoAlerta(context);
      final trafficService = new TrafficService();
-   final mapaBloc = BlocProvider.of<MapaBloc>(context);
+    
    final miUbicacion = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
    final destino = result.coordenadas;
 
@@ -77,9 +76,11 @@ class SearchBar extends StatelessWidget {
      (point) => LatLng(point[0], point[1]) 
    ).toList();
 
-   mapaBloc.add(OnCrearRutaInicioFin(rutaCoordenadas: rutaCoordenadas, distance: distancia, duration: duracion));
+   BlocProvider.of<MapaBloc>(context).add(OnCrearRutaInicioFin(rutaCoordenadas: rutaCoordenadas, distance: distancia, duration: duracion));
    BlocProvider.of<BusquedaBloc>(context).add(OnDesactivarBusquedaQuery());
    Navigator.of(context).pop(); 
+   //Agregamos el lugar seleccionado al historial
+   BlocProvider.of<BusquedaBloc>(context).add( OnAddHistorial(result) );
    }
   }
 }

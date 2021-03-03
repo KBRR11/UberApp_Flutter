@@ -40,9 +40,7 @@ class _BuildManualMarker extends StatelessWidget {
                     child: IconButton(
                         icon: Icon(Icons.arrow_back, color: Colors.black87),
                         onPressed: () {
-                          final busquedaBloc =
-                              BlocProvider.of<BusquedaBloc>(context);
-                          busquedaBloc.add(OnDesactivarManualMarker());
+                          BlocProvider.of<BusquedaBloc>(context).add(OnDesactivarManualMarker());
                         }),
                   ),
                 ),
@@ -82,10 +80,10 @@ class _BuildManualMarker extends StatelessWidget {
   void calcularDestino(BuildContext context) async{
     calculandoAlerta(context);
    final trafficService = new TrafficService();
-   final mapaBloc = BlocProvider.of<MapaBloc>(context);
+   
 
    final inicio = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
-   final destino = mapaBloc.state.ubicacionCentral;
+   final destino = BlocProvider.of<MapaBloc>(context).state.ubicacionCentral;
    final trafficResponse = await trafficService.getCoordsInicioYDestino(inicio, destino);
    final geometry = trafficResponse.routes[0].geometry;
    final distance = trafficResponse.routes[0].distance;
@@ -96,7 +94,7 @@ class _BuildManualMarker extends StatelessWidget {
      (point) => LatLng(point[0], point[1])
      ).toList();
    //print(points);
-   mapaBloc.add(OnCrearRutaInicioFin(rutaCoordenadas:rutaManual, distance: distance, duration: duration ));
+   BlocProvider.of<MapaBloc>(context).add(OnCrearRutaInicioFin(rutaCoordenadas:rutaManual, distance: distance, duration: duration ));
 
    
    BlocProvider.of<BusquedaBloc>(context).add(OnDesactivarManualMarker());

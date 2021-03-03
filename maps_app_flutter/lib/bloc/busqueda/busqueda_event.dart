@@ -10,3 +10,9 @@ class OnDesactivarManualMarker extends BusquedaEvent{}
 class OnActivarBusquedaQuery extends BusquedaEvent{}
 
 class OnDesactivarBusquedaQuery extends BusquedaEvent{}
+
+class OnAddHistorial extends BusquedaEvent{
+  final SearchResult result;
+
+  OnAddHistorial(this.result);
+}
