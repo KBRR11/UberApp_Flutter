@@ -28,7 +28,7 @@ class SearchBar extends StatelessWidget {
              
               final result = await showSearch(
                   context: context, delegate: SearchDestination(miUbicacion));
-              this.retornoBusqueda(result);
+              this.retornoBusqueda(context ,result);
             },
             child: Container(
               width: double.infinity,
@@ -53,11 +53,33 @@ class SearchBar extends StatelessWidget {
     );
   }
 
-  void retornoBusqueda(SearchResult result) {
+  Future<void> retornoBusqueda(BuildContext context ,SearchResult result) async{
     print('Canceló: ${result.cancelo}');//TODO:borrar
     print('Manual: ${result.manual}');
-    if (result.cancelo) {
-      return;
-    }
+    if (result.cancelo) return;
+
+   //calcular ruta en base al valor result
+   if(!result.cancelo  && !result.manual){//quiere decir que la busqueda se hizo por query
+   calculandoAlerta(context);
+     final trafficService = new TrafficService();
+   final mapaBloc = BlocProvider.of<MapaBloc>(context);
+   final miUbicacion = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
+   final destino = result.coordenadas;
+
+   final drivingResponse = await trafficService.getCoordsInicioYDestino(miUbicacion, destino);
+
+   final geometry = drivingResponse.routes[0].geometry;
+   final distancia = drivingResponse.routes[0].distance;
+   final duracion = drivingResponse.routes[0].duration;
+
+   final points = Poly.Polyline.Decode(encodedString: geometry, precision: 6);
+   final List<LatLng> rutaCoordenadas = points.decodedCoords.map(
+     (point) => LatLng(point[0], point[1]) 
+   ).toList();
+
+   mapaBloc.add(OnCrearRutaInicioFin(rutaCoordenadas: rutaCoordenadas, distance: distancia, duration: duracion));
+   BlocProvider.of<BusquedaBloc>(context).add(OnDesactivarBusquedaQuery());
+   Navigator.of(context).pop(); 
+   }
   }
 }

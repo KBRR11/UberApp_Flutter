@@ -13,9 +13,14 @@ class BusquedaBloc extends Bloc<BusquedaEvent, BusquedaState> {
   Stream<BusquedaState> mapEventToState( BusquedaEvent event,) async* {
    
    if (event is OnActivarManualMarker) {
+     print('Se llamó evento OnActivarManualMarker');
      yield state.copyWith(seleccionManual: true);
    }else if(event is OnDesactivarManualMarker){
      yield state.copyWith(seleccionManual: false);
+   }else if(event is OnActivarBusquedaQuery){
+     yield state.copyWith(busquedaPorQuery: true);
+   }else if(event is OnDesactivarBusquedaQuery){
+     yield state.copyWith(busquedaPorQuery: false);
    }
   }
 }

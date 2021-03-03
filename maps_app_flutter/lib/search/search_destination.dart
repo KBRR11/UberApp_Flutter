@@ -91,8 +91,15 @@ class SearchDestination extends SearchDelegate<SearchResult> {
                   title: Text(lugar.textEs),
                   subtitle: Text(lugar.placeNameEs),
                   onTap: () {
-                    print(lugar.text);
-                    //TODO trazar ruta
+                    BlocProvider.of<BusquedaBloc>(context).add(OnActivarBusquedaQuery());
+   
+                    this.close(context, SearchResult(
+                      cancelo: false, 
+                      manual: false,
+                      coordenadas: LatLng(lugar.center[1], lugar.center[0]),
+                      nombreDestino: lugar.textEs,
+                      descripcion: lugar.placeNameEs
+                      ));
                   },
                 );
               });

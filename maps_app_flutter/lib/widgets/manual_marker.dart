@@ -96,7 +96,7 @@ class _BuildManualMarker extends StatelessWidget {
      (point) => LatLng(point[0], point[1])
      ).toList();
    //print(points);
-   mapaBloc.add(OnCrearRutaManual(rutaCoordenadas:rutaManual, distance: distance, duration: duration ));
+   mapaBloc.add(OnCrearRutaInicioFin(rutaCoordenadas:rutaManual, distance: distance, duration: duration ));
 
    
    BlocProvider.of<BusquedaBloc>(context).add(OnDesactivarManualMarker());

@@ -59,7 +59,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
       //print('Mapa Siguiendo: ${this._miRuta.points[this._miRuta.points.length - 1]}');
       yield state.copyWith(ubicacionCentral: event.centroMapa);
       
-    }else if( event is OnCrearRutaManual){
+    }else if( event is OnCrearRutaInicioFin){
       yield* this._onCrearRutaManual(event);
     }
   }
@@ -99,7 +99,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
         yield state.copyWith(seguirUbicacion: !state.seguirUbicacion);
   }
 
-  Stream<MapaState> _onCrearRutaManual(OnCrearRutaManual event)async*{
+  Stream<MapaState> _onCrearRutaManual(OnCrearRutaInicioFin event)async*{
     this._miRutaManual = _miRutaManual.copyWith(
       pointsParam: event.rutaCoordenadas
     );
