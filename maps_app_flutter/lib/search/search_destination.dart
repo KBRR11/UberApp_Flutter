@@ -92,6 +92,7 @@ class SearchDestination extends SearchDelegate<SearchResult> {
                   subtitle: Text(lugar.placeNameEs),
                   onTap: () {
                     print(lugar.text);
+                    //TODO trazar ruta
                   },
                 );
               });
