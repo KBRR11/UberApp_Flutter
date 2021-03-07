@@ -66,6 +66,7 @@ class _MapaPageState extends State<MapaPage> {
         compassEnabled: false,
         onMapCreated: mapaBloc.initMapa ,//valido cuando tenemos solo un argumento que puede pasar directo EJEMPLO: onMapCreated: (GoogleMapController controler){ mapaBloc.initMapa(controler) } //SIMPLE
         polylines: mapaBloc.state.polylines.values.toSet(),
+        markers: mapaBloc.state.markers.values.toSet(),
         onCameraMove: (cameraPosition){
           mapaBloc.add( OnMovioMapa(centroMapa: cameraPosition.target) );// la idea es hacer que si el target es diferente al point final entonces SeguirUbicación cambiará a false
         },
