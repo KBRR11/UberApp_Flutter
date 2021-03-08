@@ -60,7 +60,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
       yield state.copyWith(ubicacionCentral: event.centroMapa);
       
     }else if( event is OnCrearRutaInicioFin){
-      yield* this._onCrearRutaManual(event);
+      yield* this._onCrearRutaInicioFin(event);
     }
   }
 
@@ -99,15 +99,43 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
         yield state.copyWith(seguirUbicacion: !state.seguirUbicacion);
   }
 
-  Stream<MapaState> _onCrearRutaManual(OnCrearRutaInicioFin event)async*{
+  Stream<MapaState> _onCrearRutaInicioFin(OnCrearRutaInicioFin event)async*{
     this._miRutaManual = _miRutaManual.copyWith(
       pointsParam: event.rutaCoordenadas
     );
     final currentPolylines = state.polylines;
     currentPolylines['_miRutaManual'] = this._miRutaManual;
 
+  final markerInicio = new Marker(
+    markerId: MarkerId('inicio'),
+    position: event.rutaCoordenadas[0],
+    infoWindow: InfoWindow(
+      title: 'Mi Ubicación',
+      snippet: 'te encuentras aquí.',
+      onTap: (){
+        //TODO: mostrar informacion sobre esa coordenada
+        print('información de punto inicial');
+      }
+    )
+    );
+
+  final marcadorFin = event.rutaCoordenadas.length-1; //posición de la coordenada de destino
+
+  final markerFin = new Marker(
+    markerId: MarkerId('fin'),
+    position: event.rutaCoordenadas[marcadorFin]
+    );  
+
+  final newMarkers = {...state.markers}; //desestructuramos del MapaState
+  newMarkers['inicio'] = markerInicio; //creamos una nueva llave en el map llamado 'inicio'
+  newMarkers['fin'] = markerFin;
+
+   
+
+
     yield state.copyWith(
       polylines: currentPolylines,
+      markers: newMarkers
       //TODO: Marcadores personalizados
     );
   }
