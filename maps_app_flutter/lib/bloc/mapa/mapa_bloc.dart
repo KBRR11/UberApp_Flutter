@@ -112,31 +112,39 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     infoWindow: InfoWindow(
       title: 'Mi Ubicación',
       snippet: 'te encuentras aquí.',
-      onTap: (){
-        //TODO: mostrar informacion sobre esa coordenada
-        print('información de punto inicial');
-      }
+      
     )
     );
 
   final marcadorFin = event.rutaCoordenadas.length-1; //posición de la coordenada de destino
 
+double kilometros = event.distance /1000;
+kilometros = (kilometros*100).floor().toDouble();
+kilometros = kilometros / 100;
   final markerFin = new Marker(
     markerId: MarkerId('fin'),
-    position: event.rutaCoordenadas[marcadorFin]
+    position: event.rutaCoordenadas[marcadorFin],
+    infoWindow: InfoWindow(
+      title: '${event.nombreDestino}',
+      snippet: 'Distancia: $kilometros Km, Tiempo estimado: ${(event.duration/60).floor()} min.'
+    )
     );  
 
   final newMarkers = {...state.markers}; //desestructuramos del MapaState
   newMarkers['inicio'] = markerInicio; //creamos una nueva llave en el map llamado 'inicio'
   newMarkers['fin'] = markerFin;
 
-   
+   Future.delayed(Duration(milliseconds:300)).then(
+     (value){
+       _mapController.showMarkerInfoWindow(MarkerId('fin'));//solo deja mostrar uno
+     }
+   );
 
 
     yield state.copyWith(
       polylines: currentPolylines,
       markers: newMarkers
-      //TODO: Marcadores personalizados
+      
     );
   }
 

@@ -13,11 +13,13 @@ class OnCrearRutaInicioFin extends MapaEvent {
   final List<LatLng> rutaCoordenadas;
   final double distance;
   final double duration;
+  final String nombreDestino;
 
   OnCrearRutaInicioFin({
     this.rutaCoordenadas, 
     this.distance, 
-    this.duration
+    this.duration,
+    this.nombreDestino
     });
 }
 

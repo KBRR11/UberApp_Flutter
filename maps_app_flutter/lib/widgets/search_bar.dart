@@ -75,8 +75,8 @@ class SearchBar extends StatelessWidget {
    final List<LatLng> rutaCoordenadas = points.decodedCoords.map(
      (point) => LatLng(point[0], point[1]) 
    ).toList();
-
-   BlocProvider.of<MapaBloc>(context).add(OnCrearRutaInicioFin(rutaCoordenadas: rutaCoordenadas, distance: distancia, duration: duracion));
+   //TODO: Arreglar nombreDestino
+   //BlocProvider.of<MapaBloc>(context).add(OnCrearRutaInicioFin(rutaCoordenadas: rutaCoordenadas, distance: distancia, duration: duracion));
    BlocProvider.of<BusquedaBloc>(context).add(OnDesactivarBusquedaQuery());
    Navigator.of(context).pop(); 
    //Agregamos el lugar seleccionado al historial

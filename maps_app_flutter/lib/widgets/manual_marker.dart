@@ -84,17 +84,21 @@ class _BuildManualMarker extends StatelessWidget {
 
    final inicio = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
    final destino = BlocProvider.of<MapaBloc>(context).state.ubicacionCentral;
+   //Obtener información del destino
+   final reverseQueryResponse = await trafficService.getCoordenadasInfo(destino);
+
    final trafficResponse = await trafficService.getCoordsInicioYDestino(inicio, destino);
    final geometry = trafficResponse.routes[0].geometry;
    final distance = trafficResponse.routes[0].distance;
    final duration = trafficResponse.routes[0].duration;
+   final nombreDestino = reverseQueryResponse.features[0].text;
    //decodificar los puntos que vienen en geometry
    final points = Poly.Polyline.Decode(encodedString: geometry, precision: 6).decodedCoords;
    final List<LatLng> rutaManual = points.map(
      (point) => LatLng(point[0], point[1])
      ).toList();
    //print(points);
-   BlocProvider.of<MapaBloc>(context).add(OnCrearRutaInicioFin(rutaCoordenadas:rutaManual, distance: distance, duration: duration ));
+   BlocProvider.of<MapaBloc>(context).add(OnCrearRutaInicioFin(rutaCoordenadas:rutaManual, distance: distance, duration: duration, nombreDestino: nombreDestino ));
 
    
    BlocProvider.of<BusquedaBloc>(context).add(OnDesactivarManualMarker());
