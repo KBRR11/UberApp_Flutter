@@ -14,7 +14,6 @@ class SearchBar extends StatelessWidget {
     );
   }
 
-  
   Widget buildSearchbar(BuildContext context) {
     return SafeArea(
       child: SlideInDown(
@@ -24,11 +23,14 @@ class SearchBar extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: GestureDetector(
             onTap: () async {
-            final miUbicacion = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
-             final historial = BlocProvider.of<BusquedaBloc>(context).state.historial;
+              final miUbicacion =
+                  BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
+              final historial =
+                  BlocProvider.of<BusquedaBloc>(context).state.historial;
               final result = await showSearch(
-                  context: context, delegate: SearchDestination(miUbicacion,historial));
-              this.retornoBusqueda(context ,result);
+                  context: context,
+                  delegate: SearchDestination(miUbicacion, historial));
+              this.retornoBusqueda(context, result);
             },
             child: Container(
               width: double.infinity,
@@ -53,34 +55,43 @@ class SearchBar extends StatelessWidget {
     );
   }
 
-  Future<void> retornoBusqueda(BuildContext context ,SearchResult result) async{
-    
+  Future<void> retornoBusqueda(
+      BuildContext context, SearchResult result) async {
     if (result.cancelo) return;
 
-   //calcular ruta en base al valor result
-   if(!result.cancelo  && !result.manual){//quiere decir que la busqueda se hizo por query
-   calculandoAlerta(context);
-     final trafficService = new TrafficService();
-    
-   final miUbicacion = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
-   final destino = result.coordenadas;
+    //calcular ruta en base al valor result
+    if (!result.cancelo && !result.manual) {
+      //quiere decir que la busqueda se hizo por query
+      calculandoAlerta(context);
+      final trafficService = new TrafficService();
 
-   final drivingResponse = await trafficService.getCoordsInicioYDestino(miUbicacion, destino);
+      final miUbicacion =
+          BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
+      final destino = result.coordenadas;
 
-   final geometry = drivingResponse.routes[0].geometry;
-   final distancia = drivingResponse.routes[0].distance;
-   final duracion = drivingResponse.routes[0].duration;
+      final drivingResponse =
+          await trafficService.getCoordsInicioYDestino(miUbicacion, destino);
 
-   final points = Poly.Polyline.Decode(encodedString: geometry, precision: 6);
-   final List<LatLng> rutaCoordenadas = points.decodedCoords.map(
-     (point) => LatLng(point[0], point[1]) 
-   ).toList();
-   //TODO: Arreglar nombreDestino
-   //BlocProvider.of<MapaBloc>(context).add(OnCrearRutaInicioFin(rutaCoordenadas: rutaCoordenadas, distance: distancia, duration: duracion));
-   BlocProvider.of<BusquedaBloc>(context).add(OnDesactivarBusquedaQuery());
-   Navigator.of(context).pop(); 
-   //Agregamos el lugar seleccionado al historial
-   BlocProvider.of<BusquedaBloc>(context).add( OnAddHistorial(result) );
-   }
+      final geometry = drivingResponse.routes[0].geometry;
+      final distancia = drivingResponse.routes[0].distance;
+      final duracion = drivingResponse.routes[0].duration;
+      final nombreDestino = result.nombreDestino;
+
+      final points =
+          Poly.Polyline.Decode(encodedString: geometry, precision: 6);
+      final List<LatLng> rutaCoordenadas = points.decodedCoords
+          .map((point) => LatLng(point[0], point[1]))
+          .toList();
+      
+      BlocProvider.of<MapaBloc>(context).add(OnCrearRutaInicioFin(
+          rutaCoordenadas: rutaCoordenadas,
+          distance: distancia,
+          duration: duracion,
+          nombreDestino: nombreDestino));
+      BlocProvider.of<BusquedaBloc>(context).add(OnDesactivarBusquedaQuery());
+      Navigator.of(context).pop();
+      //Agregamos el lugar seleccionado al historial
+      BlocProvider.of<BusquedaBloc>(context).add(OnAddHistorial(result));
+    }
   }
 }
