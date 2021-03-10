@@ -19,5 +19,5 @@ Future<BitmapDescriptor> getNetworkImageMarker() async{
   final frame = await imageCodec.getNextFrame();
   final data = await frame.image.toByteData(format: ui.ImageByteFormat.png);//especificamos el formato 
 
-  return await BitmapDescriptor.fromBytes(data.buffer.asUint8List());
+  return  BitmapDescriptor.fromBytes(data.buffer.asUint8List());
 }
