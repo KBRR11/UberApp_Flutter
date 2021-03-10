@@ -97,13 +97,17 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     final currentPolylines = state.polylines;
     currentPolylines['_miRutaManual'] = this._miRutaManual;
 
-    final iconBlack = await getAssetImageMarker('assets/pin-black.png', 100);
-    final iconRed = await getAssetImageMarker('assets/pin-red.png', 100);
-   
+    //final iconBlack = await getAssetImageMarker('assets/pin-black.png', 100);
+    //final iconRed = await getAssetImageMarker('assets/pin-red.png', 100);
+    final iconWidgetInicio = await getMarkerInicioIcon(event.duration.toInt());
+    final iconWidgetDestino =
+        await getMarkerDestinoIcon(event.nombreDestino, event.distance);
     final markerInicio = new Marker(
+        anchor: Offset(0.0, 1.0),
         markerId: MarkerId('inicio'),
         position: event.rutaCoordenadas[0],
-        icon: BitmapDescriptor.fromBytes(iconRed),
+        icon:
+            iconWidgetInicio, //BitmapDescriptor.fromBytes(iconRed),//!cambiamos a widget convertido a Imagen
         infoWindow: InfoWindow(
           title: 'Mi Ubicación',
           snippet: 'te encuentras aquí.',
@@ -116,9 +120,11 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     kilometros = (kilometros * 100).floor().toDouble();
     kilometros = kilometros / 100;
     final markerFin = new Marker(
+        anchor: Offset(0.1, 0.90),
         markerId: MarkerId('fin'),
         position: event.rutaCoordenadas[marcadorFin],
-        icon: BitmapDescriptor.fromBytes(iconBlack),
+        icon:
+            iconWidgetDestino, //BitmapDescriptor.fromBytes(iconBlack),//!cambiamos a widget convertido a Imagen
         infoWindow: InfoWindow(
             title: '${event.nombreDestino}',
             snippet:
@@ -130,8 +136,8 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     newMarkers['fin'] = markerFin;
 
     Future.delayed(Duration(milliseconds: 300)).then((value) {
-      _mapController
-          .showMarkerInfoWindow(MarkerId('fin')); //solo deja mostrar uno
+      //_mapController
+      //    .showMarkerInfoWindow(MarkerId('fin')); //solo deja mostrar uno
     });
 
     yield state.copyWith(polylines: currentPolylines, markers: newMarkers);

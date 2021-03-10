@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:maps_app_flutter/custom_markers/marker_inicio.dart';
+import 'package:maps_app_flutter/custom_markers/custom_markers.dart';
+
  
 class TestMarker extends StatelessWidget {
   //const TestMarker({Key key}) : super(key: key);
@@ -13,7 +14,7 @@ class TestMarker extends StatelessWidget {
           width: 350,
           color: Colors.red,
           child: CustomPaint(
-            painter:MarkerInicioPainter(),
+            painter:MarkerDetinoPainter('agsdbnajsfhasnmsdkdshfndamsdkaj', 42541),
             
           ),
         ),

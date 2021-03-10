@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Material App',
         debugShowCheckedModeBanner: false,
-        //home: LoadingPage(),
-        home:TestMarker(),
+        home: LoadingPage(),
+        //home:TestMarker(),
         routes: {
           'mapa': (_) => MapaPage(),
           'loading': (_) => LoadingPage(),
