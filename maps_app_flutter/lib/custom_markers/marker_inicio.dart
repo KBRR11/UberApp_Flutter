@@ -18,13 +18,31 @@ class MarkerInicioPainter extends CustomPainter {
       paint); 
 
     paint.color = Colors.white;
+
     //* Dibujar Circulo blanco 
     canvas.drawCircle(
       Offset(circuloNegroR, size.height - circuloNegroR), 
       circuloBlancoR, 
       paint);   
+    
+    // ? Sombra
+    final Path path = new Path();
+    path.moveTo(40, 20);
+    path.lineTo(size.width - 10, 20);
+    path.lineTo(size.width - 10, 100);
+    path.lineTo(40, 100);
+    canvas.drawShadow(path, Colors.black87, 10, false);
 
-      
+    // * Caja blanca
+    final cajaBlanca = Rect.fromLTWH(40, 20, size.width- 55, 80);
+    canvas.drawRect(cajaBlanca, paint);
+
+    // * Caja Negra 
+    paint.color = Colors.black;
+    final cajaNegra = Rect.fromLTWH(40, 20, 70, 80);
+    canvas.drawRect(cajaNegra, paint);
+
+     
   }
 
   @override
