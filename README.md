@@ -5,4 +5,4 @@ A Uber app made with flutter
 
 # App view
 ![giphy](https://media.giphy.com/media/MwIGdJa1K5nXqywNXf/giphy.gif)
-
+![search](https://media.giphy.com/media/AIY5hdwxalrgM39cJC/giphy.gif)
